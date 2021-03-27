@@ -4,13 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import vanthan99.harmic.securities.MyUserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -31,4 +33,22 @@ public abstract class Audit {
 
     @LastModifiedBy
     private String updatedBy;
+
+    @PrePersist
+    public void prePersist(){
+        this.createdBy = auditorProvider();
+    }
+
+    @PreUpdate
+    public void preUpdate(){
+        this.updatedBy = auditorProvider();
+    }
+
+    private String auditorProvider() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "unknown";
+        }
+        return ((MyUserDetails) authentication.getPrincipal()).getUsername();
+    }
 }

@@ -15,7 +15,7 @@ import java.util.Set;
 @Table
 public class User extends Audit {
     @Id
-    @Column(updatable = false,nullable = false,unique = true)
+    @Column
     private String email;
 
     @Column(length = 60,nullable = false)

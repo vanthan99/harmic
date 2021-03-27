@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Review extends BaseEntity {
 
     @Column
-    private Double rate;
+    private Long rate;
 
     @Column
     private String content;

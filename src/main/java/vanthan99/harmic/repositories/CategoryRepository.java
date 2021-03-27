@@ -8,6 +8,10 @@ import java.util.UUID;
 
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
     Set<Category> findByEnableTrue();
+
     Set<Category> findByEnableFalse();
+
     boolean existsByName(String name);
+
+    Category findByName(String name);
 }

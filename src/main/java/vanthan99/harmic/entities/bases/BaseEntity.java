@@ -9,6 +9,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import vanthan99.harmic.securities.MyUserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -39,4 +42,22 @@ public abstract class BaseEntity {
 
     @LastModifiedBy
     private String updatedBy;
+
+    @PrePersist
+    public void prePersist(){
+        this.createdBy = auditorProvider();
+    }
+
+    @PreUpdate
+    public void preUpdate(){
+        this.updatedBy = auditorProvider();
+    }
+
+    private String auditorProvider() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "unknown";
+        }
+        return ((MyUserDetails) authentication.getPrincipal()).getUsername();
+    }
 }

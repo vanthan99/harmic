@@ -9,5 +9,4 @@ public class HarmicApplication {
     public static void main(String[] args) {
         SpringApplication.run(HarmicApplication.class, args);
     }
-
 }

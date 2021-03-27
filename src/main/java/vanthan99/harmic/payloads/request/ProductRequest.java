@@ -1,14 +1,11 @@
 package vanthan99.harmic.payloads.request;
 
 import lombok.Data;
-
-import java.util.UUID;
+import vanthan99.harmic.dto.ProductDTO;
 
 @Data
 public class ProductRequest {
-    private UUID catId;
-    private String name;
-    private String description;
-    private String image;
-    private Long quantity;
+    private ProductDTO productDTO;
+    private Long starRate;
+    private Long discountPrice;
 }
